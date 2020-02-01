@@ -99,7 +99,7 @@ public class StarterAlgo implements GameLoop {
         /*
         Lets protect our destructors with some filters.
          */
-        if (move.data.turnInfo.turnNumber % 10 == 0) {
+        if (move.data.turnInfo.turnNumber % 15 == 0) {
             move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Encryptor);
             move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Filter);
         }
