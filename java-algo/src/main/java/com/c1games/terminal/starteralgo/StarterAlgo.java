@@ -25,7 +25,7 @@ public class StarterAlgo implements GameLoop {
             new Coords(1, 13),
             new Coords(26, 13),
             new Coords(22, 11),
-            new Coords(5. 11),
+            new Coords(5, 11),
             new Coords(25, 12),
             new Coords(13, 11),
             new Coords(14, 11),
@@ -99,7 +99,7 @@ public class StarterAlgo implements GameLoop {
         /*
         Lets protect our destructors with some filters.
          */
-        if (move.data.turnInfo.turnNumber % 6 == 0) {
+        if (move.data.turnInfo.turnNumber % 10 == 0) {
             move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Encryptor);
             move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Filter);
         }
