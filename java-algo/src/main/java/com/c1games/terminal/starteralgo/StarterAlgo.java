@@ -99,14 +99,13 @@ public class StarterAlgo implements GameLoop {
         /*
         Lets protect our destructors with some filters.
          */
-        if (move.data.turnInfo.turnNumber % 15 == 0) {
+        if (move.data.turnInfo.turnNumber % 6 == 0) {
             move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Encryptor);
-            move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Filter);
+            move.attemptUpgradeMultiple(Arrays.asList(filterProtectDestructors));
         }
         /*
         Lastly, lets upgrade those important filters that protect our destructors.
          */
-        move.attemptUpgradeMultiple(Arrays.asList(filterProtectDestructors));
     }
 
     /**
@@ -281,6 +280,7 @@ public class StarterAlgo implements GameLoop {
 
         for (int i = 0; i<22; i++) {
             if (move.data.turnInfo.turnNumber % 10 == 0) {
+                move.attemptSpawn(new Coords(24, 10), UnitType.Scrambler);
                 move.attemptSpawn(new Coords(24, 10), UnitType.EMP);
             }
         }
