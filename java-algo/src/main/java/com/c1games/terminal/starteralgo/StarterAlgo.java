@@ -22,14 +22,14 @@ public class StarterAlgo implements GameLoop {
     private static final Coords[] defensiveDestructorLocations = {
             new Coords(0, 13),
             new Coords(27, 13),
+            new Coords(1, 13),
+            new Coords(26, 13),
             new Coords(1, 12),
             new Coords(26, 12),
             new Coords(13, 11),
             new Coords(14, 11),
             new Coords(15, 13),
             new Coords(12, 13),
-            new Coords(1, 13),
-            new Coords(26, 13),
             new Coords(23, 11),
             new Coords(4, 11),
             new Coords(8, 8),
@@ -60,8 +60,8 @@ public class StarterAlgo implements GameLoop {
     @Override
     public void onTurn(GameIO io, GameState move) {
         GameIO.debug().println("Performing turn " + move.data.turnInfo.turnNumber + " of your custom algo strategy");
-        buildDefenses(move);
         buildReactiveDefenses(move);
+        buildDefenses(move);
         if (move.data.turnInfo.turnNumber % 10 == 0) {
             deployRandomPings(move);
             Coords bestLoc = leastDamageSpawnLocation(move, List.of(new Coords(13, 0), new Coords(14, 0)));
@@ -278,7 +278,9 @@ public class StarterAlgo implements GameLoop {
         }
 
         for (int i = 0; i<22; i++) {
-            move.attemptSpawn(new Coords(24, 10), UnitType.EMP);
+            if (move.data.turnInfo.turnNumber % 5 == 0) {
+                move.attemptSpawn(new Coords(24, 10), UnitType.EMP);
+            }
         }
     }
 
