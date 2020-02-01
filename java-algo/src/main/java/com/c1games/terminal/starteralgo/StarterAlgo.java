@@ -16,9 +16,19 @@ public class StarterAlgo implements GameLoop {
         new GameLoopDriver(new StarterAlgo()).run();
     }
     private static final Coords[] filterProtectDestructors = {
-            new Coords(8, 12),
-            new Coords(19, 12)
+            new Coords(8, 9),
+            new Coords(9, 9),
+            new Coords(10, 9),
+            new Coords(11, 9),
+            new Coords(12, 9),
+            new Coords(13, 9),
+            new Coords(14, 9),
+            new Coords(15, 9),
+            new Coords(16, 9),
+            new Coords(17, 9),
+            new Coords(18, 9)
     };
+
     private static final Coords[] defensiveDestructorLocations = {
             new Coords(0, 13),
             new Coords(27, 13),
@@ -61,9 +71,9 @@ public class StarterAlgo implements GameLoop {
     @Override
     public void onTurn(GameIO io, GameState move) {
         GameIO.debug().println("Performing turn " + move.data.turnInfo.turnNumber + " of your custom algo strategy");
-        buildReactiveDefenses(move);
         buildDefenses(move);
-        if (move.data.turnInfo.turnNumber % 7 == 0) {
+        buildReactiveDefenses(move);
+        if (move.data.turnInfo.turnNumber % 10 == 0) {
             deployRandomPings(move);
             Coords bestLoc = leastDamageSpawnLocation(move, List.of(new Coords(13, 0), new Coords(14, 0)));
             for (int i = 0; i < 100; i++) {
@@ -95,17 +105,18 @@ public class StarterAlgo implements GameLoop {
         First lets protect ourselves a little with destructors.
          */
         move.attemptSpawnMultiple(Arrays.asList(defensiveDestructorLocations), UnitType.Destructor);
+        move.attemptSpawnMultiple(Arrays.asList(encryptorLocations), UnitType.Encryptor);
 
         /*
         Lets protect our destructors with some filters.
          */
-        if (move.data.turnInfo.turnNumber % 6 == 0) {
-            move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Encryptor);
-            move.attemptUpgradeMultiple(Arrays.asList(filterProtectDestructors));
+        if (move.data.turnInfo.turnNumber % 5 == 0) {
+            move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Filter);
         }
         /*
         Lastly, lets upgrade those important filters that protect our destructors.
          */
+        move.attemptUpgradeMultiple(Arrays.asList(filterProtectDestructors));
     }
 
     /**
@@ -279,10 +290,7 @@ public class StarterAlgo implements GameLoop {
         }
 
         for (int i = 0; i<22; i++) {
-            if (move.data.turnInfo.turnNumber % 10 == 0) {
-                move.attemptSpawn(new Coords(24, 10), UnitType.Scrambler);
-                move.attemptSpawn(new Coords(24, 10), UnitType.EMP);
-            }
+            move.attemptSpawn(new Coords(24, 10), UnitType.EMP);
         }
     }
 
