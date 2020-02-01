@@ -63,15 +63,14 @@ public class StarterAlgo implements GameLoop {
         buildDefenses(move);
         buildReactiveDefenses(move);
         if (move.data.turnInfo.turnNumber % 10 == 0) {
-            deployRandomScramblers(move);
+            deployRandomPings(move);
             Coords bestLoc = leastDamageSpawnLocation(move, List.of(new Coords(13, 0), new Coords(14, 0)));
             for (int i = 0; i < 100; i++) {
                 move.attemptSpawnMultiple(Arrays.asList(encryptorLocations), UnitType.Encryptor);
                 move.attemptSpawn(bestLoc,UnitType.Ping);
             }
         } else {
-
-                empLineStrategy(move);
+            empLineStrategy(move);
         }
     }
     /**
@@ -99,7 +98,9 @@ public class StarterAlgo implements GameLoop {
         /*
         Lets protect our destructors with some filters.
          */
-        move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Filter);
+        if (move.data.turnInfo.turnNumber % 5 == 0) {
+            move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Filter);
+        }
         /*
         Lastly, lets upgrade those important filters that protect our destructors.
          */
@@ -139,6 +140,33 @@ public class StarterAlgo implements GameLoop {
         while (move.numberAffordable(UnitType.Scrambler) >= 1) {
             Coords c = friendlyEdges.get(rand.nextInt(friendlyEdges.size()));
             move.attemptSpawn(c, UnitType.Scrambler);
+            /*
+            We don't have to remove the location since multiple information
+            units can occupy the same space. Note however, if all edge locations are blocked this will infinite loop!
+             */
+        }
+    }
+
+    private void deployRandomPings(GameState move) {
+        /*
+        Lets send out Scramblers to help destroy enemy information units.
+        A complex algo would predict where the enemy is going to send units and
+        develop its strategy around that. But this algo is simple so lets just
+        send out scramblers in random locations and hope for the best.
+
+        Firstly information units can only deploy on our edges. So lets get a
+        list of those locations.
+         */
+        List<Coords> friendlyEdges = new ArrayList<>();
+        friendlyEdges.addAll(Arrays.asList(MapBounds.EDGE_LISTS[MapBounds.EDGE_BOTTOM_LEFT]));
+        friendlyEdges.addAll(Arrays.asList(MapBounds.EDGE_LISTS[MapBounds.EDGE_BOTTOM_RIGHT]));
+
+        /*
+        While we have remaining bits to spend lets send out scramblers randomly.
+        */
+        while (move.numberAffordable(UnitType.Ping) >= 1) {
+            Coords c = friendlyEdges.get(rand.nextInt(friendlyEdges.size()));
+            move.attemptSpawn(c, UnitType.Ping);
             /*
             We don't have to remove the location since multiple information
             units can occupy the same space. Note however, if all edge locations are blocked this will infinite loop!
